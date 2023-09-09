@@ -1,7 +1,7 @@
 const { rawDataFilter } = require('./rawDataFilter.js');
 const { saveExcelFile } = require('./exportExcel.js');
 
-const startDate = new Date('2023-09-01'); 
+const startDate = new Date('2023-08-01'); 
 const currentDate = new Date();
 
 async function workCrawlData() {

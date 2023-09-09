@@ -1,0 +1,17 @@
+{
+    "name": "hnx-crawl-data",
+    "version": "1.0.0",
+    "description": "Made for Kien",
+    "main": "main.js",
+    "scripts": {
+      "start": "node main.js"
+    },
+    "author": "duymanh3602",
+    "license": "UNLICENSED",
+    "dependencies": {
+      "xlxs": "^0.18.5",
+      "cheerio": "^1.0.0-rc.12",
+      "fs": "^0.0.1-security",
+      "axios": "^1.5.0"
+    }
+  }
