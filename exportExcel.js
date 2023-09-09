@@ -17,31 +17,21 @@ async function saveExcelFile(jsonData) {
         "20 năm",
     ];    
 
-    const data = JSON.parse(jsonData);
-
+    const data = jsonData;
     const excelTable = [];
 
     excelTable.push(dataSource);
 
-    Object.keys(data).forEach(key => {
+    for (let i = 0; i < data.length; i++) {
         const rowExcel = [];
-        const valueObj = data[key];
-        rowExcel.push(key);
-        Object.keys(valueObj).forEach(subKey => {
-            const value = valueObj[subKey];
+        rowExcel.push(data[i].date);
+        Object.keys(data[i].data).forEach(subKey => {
+            const value = data[i].data[subKey];
             rowExcel.push(value);
         });
         excelTable.push(rowExcel);
-    });
-    
-    // var workbook;
-    // try {
-    //     workbook = XLSX.readFile('data.xlsx');
-    // } catch {
-        
-    // }
-    // workbook = XLSX.utils.book_new('data.xlsx')
-    // file save
+    }
+
     const wb = XLSX.utils.book_new();
 
     const wsName = 'Sheet1';
@@ -52,19 +42,6 @@ async function saveExcelFile(jsonData) {
     const excelBuffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
 
     fs.writeFileSync('data.xlsx', excelBuffer);
-    // const worksheetName = 'Sheet1';
-    // const worksheet = workbook.Sheets[worksheetName];
-
-    // const lastCell = worksheet['!ref'].split(':').pop();
-    // const lastRowIndex = parseInt(lastCell.match(/\d+/)[0]);
-
-    // const newRange = XLSX.utils.sheet_add_aoa(worksheet, excelTable, { origin: -1 });
-
-    // const newLastRowIndex = lastRowIndex + excelTable.length;
-    // const newLastCell = lastCell.replace(/\d+/, newLastRowIndex);
-    // worksheet['!ref'] = `A1:${newLastCell}`;
-
-    // XLSX.writeFile(workbook, 'data.xlsx');
 }
 
 module.exports = {

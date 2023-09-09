@@ -4,12 +4,15 @@ const cheerio = require('cheerio');
 const { postData } = require('./crawlData.js');
 
 async function rawDataFilter(day, month, year) {
+    const row = {
+        date: '',
+        data: ''
+    };
     const html = await postData(day, month, year);
 
     const $ = cheerio.load(html);
     const table = $('table');
 
-    const row = {};
     const rowData = {};
 
     table.find('tbody tr').each((_, row) => {
@@ -27,10 +30,10 @@ async function rawDataFilter(day, month, year) {
         });
         rowData[timeIndex] = value;
     });
-    row[day + '-' + month + '-' + year] = rowData;
+    row.date = day + '-' + month + '-' + year;
+    row.data = rowData;
 
-    const jsonData = JSON.stringify(row, null, 2);
-    return jsonData;
+    return row
 }
 
 module.exports = {
