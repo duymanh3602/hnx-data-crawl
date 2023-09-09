@@ -1,5 +1,14 @@
 const fs = require('fs');
 const XLSX = require('xlsx');
+const path = require('path');
+
+const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+};
 
 async function saveExcelFile(jsonData) {
     let dataSource = [
@@ -41,7 +50,13 @@ async function saveExcelFile(jsonData) {
 
     const excelBuffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
 
-    fs.writeFileSync('data.xlsx', excelBuffer);
+    // lưu tên file là thời gian thực hiện crawl
+    const timestamp = new Date().getTime();
+    const formattedTimestamp = new Date(timestamp).toLocaleString('en-US', options).replace(/[/:]/g, '-');
+    let fileName = 'hnx_crawled_data_' + formattedTimestamp + '.xlsx';
+    const filePath = path.join('./crawled', fileName);
+
+    fs.writeFileSync(filePath, excelBuffer);
 }
 
 module.exports = {
