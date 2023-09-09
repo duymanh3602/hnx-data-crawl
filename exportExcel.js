@@ -33,11 +33,16 @@ async function saveExcelFile(jsonData) {
 
     for (let i = 0; i < data.length; i++) {
         const rowExcel = [];
+        
         rowExcel.push(data[i].date);
         Object.keys(data[i].data).forEach(subKey => {
             const value = data[i].data[subKey];
+            
             rowExcel.push(value);
         });
+        if (rowExcel[1] === '' || rowExcel[1] == null) {
+            continue;
+        }
         excelTable.push(rowExcel);
     }
 
