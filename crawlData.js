@@ -24,11 +24,11 @@ function convertMonth(month) {
     }
 }
 
-async function postData(day, month) {
+async function postData(day, month, year) {
   try {
     const url = 'https://www.hnx.vn/ModuleReportBonds/Bond_YieldCurve/SearchAndNextPageDuLieuTT_Indicator'; // Replace with the URL you want to send the POST request to
     const rawRequestBody = 'p_keysearch=' + convertDay(day) 
-    + '%2F' + convertMonth(month) + '%2F2023%7C&pColOrder=col_a&pOrderType=ASC&pCurrentPage=1&pIsSearch=1';
+    + '%2F' + convertMonth(month) + '%2F' + year + '%7C&pColOrder=col_a&pOrderType=ASC&pCurrentPage=1&pIsSearch=1';
 
     const headers = {
         'Accept': '*/*',
@@ -52,19 +52,14 @@ async function postData(day, month) {
       'sec-ch-ua-platform': '"Linux"'
     };
 
-    // Make the POST request
     const response = await axios.post(url, rawRequestBody, { headers });
 
-    // Handle the response
-    // console.log('Response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error:', error.message);
   }
 }
 
-// Call the postData function with a specific day value
-// postData(11, 9);
 module.exports = {
     postData
 };

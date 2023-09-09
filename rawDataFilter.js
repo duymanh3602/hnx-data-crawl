@@ -3,26 +3,38 @@ const cheerio = require('cheerio');
 
 const { postData } = require('./crawlData.js');
 
-async function rawDataFilter() {
-    const html = await postData(11, 9);
+async function rawDataFilter(day, month, year) {
+    const html = await postData(day, month, year);
 
     const $ = cheerio.load(html);
     const table = $('table');
 
-    const data = [];
+    const row = {};
+    const rowData = {};
 
     table.find('tbody tr').each((_, row) => {
-        const rowData = {};
+        var timeIndex = '-';
+        var value = '-';
         $(row).find('td').each((index, td) => {
-        const header = table.find('thead th').eq(index).text();
-        const value = $(td).text().trim();
-        rowData[header] = value;
+            const header = table.find('thead th').eq(index).text();
+            if (header === 'Kỳ hạn còn lại') {
+                let temp = $(td).text().trim();
+                timeIndex = temp;
+            } else if (header == 'Spot rate theo năm (%)') {
+                let temp = $(td).text().trim();
+                value = temp;
+            }
         });
-        data.push(rowData);
+        rowData[timeIndex] = value;
     });
-    
-    const jsonData = JSON.stringify(data, null, 2);
+    row[day + '-' + month + '-' + year] = rowData;
+
+    const jsonData = JSON.stringify(row, null, 2);
     fs.writeFileSync('data.json', jsonData, 'utf8');
 }
 
-rawDataFilter()
+rawDataFilter(11, 9, 2023)
+
+module.exports = {
+    rawDataFilter
+};
