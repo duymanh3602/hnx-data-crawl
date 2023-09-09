@@ -1,9 +1,8 @@
 const fs = require('fs');
 const XLSX = require('xlsx');
 
-const jsonData = fs.readFileSync('target.json', 'utf-8');
-
-let dataSource = [
+async function saveExcelFile(jsonData) {
+    let dataSource = [
         "Date",
         "3 tháng",
         "6 tháng",
@@ -16,38 +15,58 @@ let dataSource = [
         "10 năm",
         "15 năm",
         "20 năm",
-];    
+    ];    
 
-const data = JSON.parse(jsonData);
+    const data = JSON.parse(jsonData);
 
-const excelTable = [];
+    const excelTable = [];
 
-excelTable.push(dataSource);
+    excelTable.push(dataSource);
 
-Object.keys(data).forEach(key => {
-    const rowExcel = [];
-    const valueObj = data[key];
-    rowExcel.push(key);
-    Object.keys(valueObj).forEach(subKey => {
-        const value = valueObj[subKey];
-        rowExcel.push(value);
+    Object.keys(data).forEach(key => {
+        const rowExcel = [];
+        const valueObj = data[key];
+        rowExcel.push(key);
+        Object.keys(valueObj).forEach(subKey => {
+            const value = valueObj[subKey];
+            rowExcel.push(value);
+        });
+        excelTable.push(rowExcel);
     });
-    excelTable.push(rowExcel);
-});
+    
+    // var workbook;
+    // try {
+    //     workbook = XLSX.readFile('data.xlsx');
+    // } catch {
+        
+    // }
+    // workbook = XLSX.utils.book_new('data.xlsx')
+    // file save
+    const wb = XLSX.utils.book_new();
 
-// console.log(excelTable);
+    const wsName = 'Sheet1';
+    const ws = XLSX.utils.aoa_to_sheet(excelTable);
 
-// console.log(dataSource);
-const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, wsName);
 
-const wsName = 'Sheet1';
-const ws = XLSX.utils.aoa_to_sheet(excelTable);
+    const excelBuffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
 
-// Add the worksheet to the workbook
-XLSX.utils.book_append_sheet(wb, ws, wsName);
+    fs.writeFileSync('data.xlsx', excelBuffer);
+    // const worksheetName = 'Sheet1';
+    // const worksheet = workbook.Sheets[worksheetName];
 
-// Convert the workbook to a buffer
-const excelBuffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    // const lastCell = worksheet['!ref'].split(':').pop();
+    // const lastRowIndex = parseInt(lastCell.match(/\d+/)[0]);
 
-// Write the buffer to a file
-fs.writeFileSync('data.xlsx', excelBuffer);
+    // const newRange = XLSX.utils.sheet_add_aoa(worksheet, excelTable, { origin: -1 });
+
+    // const newLastRowIndex = lastRowIndex + excelTable.length;
+    // const newLastCell = lastCell.replace(/\d+/, newLastRowIndex);
+    // worksheet['!ref'] = `A1:${newLastCell}`;
+
+    // XLSX.writeFile(workbook, 'data.xlsx');
+}
+
+module.exports = {
+    saveExcelFile
+};

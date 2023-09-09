@@ -30,10 +30,8 @@ async function rawDataFilter(day, month, year) {
     row[day + '-' + month + '-' + year] = rowData;
 
     const jsonData = JSON.stringify(row, null, 2);
-    fs.writeFileSync('data.json', jsonData, 'utf8');
+    return jsonData;
 }
-
-rawDataFilter(11, 9, 2023)
 
 module.exports = {
     rawDataFilter
